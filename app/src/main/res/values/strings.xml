@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Devera</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="userName">Username or email</string>
+    <string name="password">Password</string>
+    <string name="login">Sign In</string>
+    <string name="don_t_have_account_sign_up">Don\'t have account ? Sign Up</string>
+    <string name="forgot_password">Forgot password ?</string>
+    <string name="devera">DevEra</string>
+    <string name="Full_Name">Full Name</string>
+    <string name="reguserName">User Name</string>
+    <string name="create_account">Create Account</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="Email">Email </string>
+    <string name="choose_your_photo">Choose Your Photo</string>
+</resources>
