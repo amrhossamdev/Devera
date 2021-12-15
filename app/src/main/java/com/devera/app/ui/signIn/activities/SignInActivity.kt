@@ -12,7 +12,7 @@ import kotlin.math.sign
 
 class SignInActivity : AppCompatActivity() {
     lateinit var createAccount: TextView
-    lateinit var signInBtn : Button;
+    lateinit var signInBtn: Button;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
@@ -26,7 +26,7 @@ class SignInActivity : AppCompatActivity() {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
-        signInBtn.setOnClickListener{
+        signInBtn.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }

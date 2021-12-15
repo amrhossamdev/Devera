@@ -1,29 +1,32 @@
-package com.devera.app.ui.home
+package com.devera.app.ui.groups.activites
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.devera.app.R
 import com.devera.app.ui.home.adapter.HomeAdapter
 import com.devera.app.ui.home.models.HomeModel
 import com.devera.app.ui.home.models.HomeResponse
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class HomeFragment : Fragment() {
+class GroupPostActivity : AppCompatActivity() {
 
     private lateinit var homeAdapter: HomeAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var homeResponse: HomeResponse
+    private lateinit var scrollView: NestedScrollView
+    private lateinit var addPost: FloatingActionButton
+    private var oldScrollYPostion = 0
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val view: View = inflater.inflate(R.layout.fragment_home, container, false)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_posts)
+        initToolbar()
+        initViews()
+        handleScroll()
         val data = ArrayList<HomeModel>()
         data.add(
             HomeModel(
@@ -62,16 +65,47 @@ class HomeFragment : Fragment() {
             )
         )
         homeResponse = HomeResponse(data);
-        initAdapter(view)
-        return view
+        initAdapter()
     }
 
-    private fun initAdapter(view: View) {
-        recyclerView = view.findViewById(R.id.recycleView)
-        recyclerView.layoutManager = LinearLayoutManager(context)
+    private fun initToolbar() {
+        val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        if (supportActionBar != null) {
+            supportActionBar?.setDisplayHomeAsUpEnabled(true);
+            supportActionBar?.setDisplayShowHomeEnabled(true);
+        }
+        title = "C++"
+    }
+
+    private fun initViews(){
+        scrollView = findViewById(R.id.scrollView)
+        addPost = findViewById(R.id.floatingActionButton)
+    }
+
+    private fun handleScroll() {
+        scrollView.viewTreeObserver.addOnScrollChangedListener {
+            if (scrollView.scrollY > oldScrollYPostion) {
+                addPost.hide()
+            } else if (scrollView.scrollY < oldScrollYPostion || scrollView.scrollY <= 0) {
+                addPost.show()
+            }
+            oldScrollYPostion = scrollView.scrollY
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            finish()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun initAdapter() {
+        recyclerView = findViewById(R.id.recycleView)
+        recyclerView.layoutManager = LinearLayoutManager(this@GroupPostActivity)
         homeAdapter =
-            HomeAdapter(requireContext(), homeResponse)
+            HomeAdapter(this@GroupPostActivity, homeResponse)
         recyclerView.adapter = homeAdapter
     }
-
 }

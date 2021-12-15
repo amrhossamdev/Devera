@@ -8,4 +8,10 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="gray">#909399</color>
+    <color name="downVoteColor">#FF7F50</color>
+    <color name="upvoteColor">#32CD99</color>
+    <color name="light_gray">#f2f2f2</color>
+    <color name="light_blue">#7EBBF8</color>
+
 </resources>

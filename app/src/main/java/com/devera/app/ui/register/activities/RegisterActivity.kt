@@ -1,9 +1,8 @@
 package com.devera.app.ui.register.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageButton
-import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import com.devera.app.R
 
 class RegisterActivity : AppCompatActivity() {
