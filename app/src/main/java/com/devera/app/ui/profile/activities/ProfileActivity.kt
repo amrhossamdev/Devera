@@ -1,38 +1,24 @@
-package com.devera.app.ui.groups.activites
+package com.devera.app.ui.profile.activities
 
-import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
-import android.view.MenuItem
-import android.view.ViewGroup
-import android.view.Window
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.devera.app.R
 import com.devera.app.ui.home.adapter.HomeAdapter
 import com.devera.app.ui.home.models.HomeModel
 import com.devera.app.ui.home.models.HomeResponse
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-
-class GroupPostActivity : AppCompatActivity() {
+class ProfileActivity : AppCompatActivity() {
 
     private lateinit var homeAdapter: HomeAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var homeResponse: HomeResponse
-    private lateinit var scrollView: NestedScrollView
-    private lateinit var addPost: FloatingActionButton
-    private var oldScrollYPostion = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_posts)
+        setContentView(R.layout.activity_profile)
         initToolbar()
-        initViews()
-        handleScroll()
         val data = ArrayList<HomeModel>()
         data.add(
             HomeModel(
@@ -72,7 +58,6 @@ class GroupPostActivity : AppCompatActivity() {
         )
         homeResponse = HomeResponse(data);
         initAdapter()
-        addPost()
     }
 
     private fun initToolbar() {
@@ -82,57 +67,14 @@ class GroupPostActivity : AppCompatActivity() {
             supportActionBar?.setDisplayHomeAsUpEnabled(true);
             supportActionBar?.setDisplayShowHomeEnabled(true);
         }
-        title = "C++"
-    }
-
-    private fun initViews() {
-        scrollView = findViewById(R.id.scrollView)
-        addPost = findViewById(R.id.floatingActionButton)
-    }
-
-    private fun handleScroll() {
-        scrollView.viewTreeObserver.addOnScrollChangedListener {
-            if (scrollView.scrollY > oldScrollYPostion) {
-                addPost.hide()
-            } else if (scrollView.scrollY < oldScrollYPostion || scrollView.scrollY <= 0) {
-                addPost.show()
-            }
-            oldScrollYPostion = scrollView.scrollY
-        }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            finish()
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    private fun showDialog(context: Context, msg: String?) {
-        val dialog = Dialog(context)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(true)
-        val window: Window = dialog.window!!
-        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        dialog.setContentView(R.layout.add_post_dialog)
-        val name = dialog.findViewById(R.id.userNameTxt) as TextView
-        name.text = "Amr Hossam"
-//        val dialogButton: Button = dialog.findViewById(R.id.btn_dialog) as Button
-//        dialogButton.setOnClickListener { dialog.dismiss() }
-        dialog.show()
-    }
-
-    fun addPost() {
-        addPost.setOnClickListener {
-            showDialog(this@GroupPostActivity, "lol")
-        }
+        title = "Amr Hossam"
     }
 
     private fun initAdapter() {
         recyclerView = findViewById(R.id.recycleView)
-        recyclerView.layoutManager = LinearLayoutManager(this@GroupPostActivity)
+        recyclerView.layoutManager = LinearLayoutManager(this@ProfileActivity)
         homeAdapter =
-            HomeAdapter(this@GroupPostActivity, homeResponse)
+            HomeAdapter(this@ProfileActivity, homeResponse)
         recyclerView.adapter = homeAdapter
     }
 }

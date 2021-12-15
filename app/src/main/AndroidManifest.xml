@@ -10,6 +10,10 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.Devera">
         <activity
+            android:name=".ui.profile.activities.ProfileActivity"
+            android:theme="@style/Theme.Devera.NoActionBar"
+            android:exported="true" />
+        <activity
             android:name=".ui.groups.activites.GroupPostActivity"
             android:exported="true"
             android:theme="@style/Theme.Devera.NoActionBar" />

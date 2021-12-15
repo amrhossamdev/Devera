@@ -16,4 +16,5 @@
     <string name="sign_up">Sign Up</string>
     <string name="Email">Email </string>
     <string name="choose_your_photo">Choose Your Photo</string>
+    <string name="select_photo">Select photo</string>
 </resources>
