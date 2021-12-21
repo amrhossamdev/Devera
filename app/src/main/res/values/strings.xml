@@ -17,4 +17,12 @@
     <string name="Email">Email </string>
     <string name="choose_your_photo">Choose Your Photo</string>
     <string name="select_photo">Select photo</string>
+    <string name="Name">Name</string>
+    <string name="confirm_changes">Confirm Changes</string>
+    <string name="old_password">Old Password</string>
+    <string name="new_password">New password</string>
+    <string name="confirm_new_password">Confirm new password</string>
+    <string name="please_type_comment">Please type a comment...</string>
+    <string name="no_posts">No posts</string>
+    <string name="what_s_on_your_mind">What\'s on your mind ?</string>
 </resources>

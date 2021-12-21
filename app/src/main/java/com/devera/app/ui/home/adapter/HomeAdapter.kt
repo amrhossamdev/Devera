@@ -2,37 +2,53 @@ package com.devera.app.ui.home.adapter
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.graphics.PorterDuff
-import android.graphics.drawable.Drawable
+import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.content.res.AppCompatResources
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
-import androidx.core.widget.ImageViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.devera.app.R
+import com.devera.app.network.ApiInterface
+import com.devera.app.network.RetrofitInstance
 import com.devera.app.ui.home.activities.PostActivity
-import com.devera.app.ui.home.models.HomeResponse
-import org.w3c.dom.Text
+import com.devera.app.ui.home.models.BodyRequestsModel.UpVotingBody
+import com.devera.app.ui.home.models.VoteActionsModel
+import com.devera.app.ui.profile.activities.ProfileActivity
+import com.devera.app.ui.profile.models.ProfileResponse
+import com.learnawy.app.storage.AppReferences
+import de.hdodenhof.circleimageview.CircleImageView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 
-class HomeAdapter(var context: Context, var datalist: HomeResponse) :
+class HomeAdapter(var context: Context, var datalist: ProfileResponse) :
     RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var postImage: ImageView = itemView.findViewById(R.id.postImage)
+        var profileImage: CircleImageView = itemView.findViewById(R.id.profileImage)
         var desc: TextView = itemView.findViewById(R.id.postDescTxt)
         var userName: TextView = itemView.findViewById(R.id.userNameTxt)
         var upVoteBtn: ImageButton = itemView.findViewById(R.id.upVoteBtn)
         var downVoteBtn: ImageButton = itemView.findViewById(R.id.downVoteBtn)
         var typeComment: TextView = itemView.findViewById(R.id.typeAnswer_editText)
+        var time: TextView = itemView.findViewById(R.id.timeTxt)
+        var groupName: TextView = itemView.findViewById(R.id.groupNameTxt)
+        var downVoteCounter: TextView = itemView.findViewById(R.id.downVoteCount)
+        var upVoteCounter: TextView = itemView.findViewById(R.id.upVoteCount)
 
     }
 
@@ -43,26 +59,71 @@ class HomeAdapter(var context: Context, var datalist: HomeResponse) :
         return ViewHolder(view)
     }
 
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var isUpVoted = false
         var isDownVoted = false
-        if (datalist.subjects[position].reactId != null) {
-            if (datalist.subjects[position].reactId == 1) {
+        var userReact = datalist.data.message[position].userReact
+        if (userReact != -1) {
+            if (userReact == 1) {
                 isUpVoted = true
-            } else if (datalist.subjects[position].reactId == 0) {
+            } else if (userReact == 0) {
                 isDownVoted = true
             }
         }
+        Log.e("VOTE DATA", userReact.toString());
         handleReact(isUpVoted, isDownVoted, holder)
         handleClickOnReact(isUpVoted, isDownVoted, holder, position)
         handleCommentOnClick(holder, position)
+        handleOnProfileClick(holder)
+        val timeStamp = datalist.data.message[position].post.createdAt
+        val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("h:mm a", Locale.ENGLISH)
+        val bookingTime: Instant = Instant.parse(timeStamp)
+        val finalTime: String = bookingTime.atZone(ZoneId.systemDefault()).format(timeFormatter)
 
-        holder.userName.text = datalist.subjects[position].name
-        holder.desc.text = datalist.subjects[position].desc
-        if (!datalist.subjects[position].hasImage) {
-            holder.postImage.visibility = View.GONE
-        } else {
-            holder.postImage.visibility = View.VISIBLE
+        holder.postImage.visibility = View.GONE
+        holder.time.text = finalTime
+        holder.userName.text = datalist.data.message[position].post.userName
+        holder.desc.text = datalist.data.message[position].post.postAbstract
+        holder.groupName.text = "in " + getGroupName(datalist.data.message[position].post.groupId)
+        holder.downVoteCounter.text =
+            "- " + datalist.data.message[position].downVoteCounter.toString() + " downV"
+        holder.upVoteCounter.text =
+            "+ " + datalist.data.message[position].upVoteCounter.toString() + " upVote"
+
+//        if (!datalist.subjects[position].hasImage) {
+//        } else {
+//            holder.postImage.visibility = View.VISIBLE
+//        }
+    }
+
+    private fun getGroupName(id: Int): String {
+        when (id) {
+            1 -> {
+                return "C++";
+            }
+            2 -> {
+                return "Java"
+            }
+            3 -> {
+                return "Android development";
+            }
+            4 -> {
+                return "Web development";
+            }
+            5 -> {
+                return "Cyber security"
+            }
+        }
+        return "";
+    }
+
+    private fun handleOnProfileClick(holder: ViewHolder) {
+        holder.profileImage.setOnClickListener {
+            val i = Intent(context, ProfileActivity::class.java)
+            i.putExtra("id", datalist.data.message[holder.adapterPosition].post.userId)
+            context.startActivity(i)
         }
     }
 
@@ -104,28 +165,107 @@ class HomeAdapter(var context: Context, var datalist: HomeResponse) :
         holder.upVoteBtn.setOnClickListener {
             if (isUpVoted) {
                 // you will do unVote !
-                datalist.subjects[position].reactId = null
-
+                sendUpVoteRequest(position, isUpVoted, isDownVoted)
             } else {
-                // send request to upVote
-                datalist.subjects[position].reactId = 1
-
+                sendUpVoteRequest(position, isUpVoted, isDownVoted)
             }
             notifyItemChanged(position)
-
         }
         holder.downVoteBtn.setOnClickListener {
             if (isDownVoted) {
                 // send request to do unDownVote !
-                datalist.subjects[position].reactId = null
+                sendDownVote(position, isDownVoted, isUpVoted)
 
             } else {
                 // send request to downVote
-                datalist.subjects[position].reactId = 0
-
+                sendDownVote(position, isDownVoted, isUpVoted)
             }
             notifyItemChanged(position)
         }
+    }
+
+    private fun sendUpVoteRequest(pos: Int, isUpVoted: Boolean, isDownVoted: Boolean) {
+        val retIn = RetrofitInstance.getRetrofitInstance(context).create(ApiInterface::class.java)
+        val upVote =
+            UpVotingBody(
+                datalist.data.message[pos].post.id,
+                AppReferences.getUserData(context)!!.id
+            )
+
+        retIn.upVote(upVote).enqueue(object : Callback<VoteActionsModel> {
+            override fun onFailure(call: Call<VoteActionsModel>, t: Throwable) {
+                Toast.makeText(
+                    context,
+                    t.message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            override fun onResponse(
+                call: Call<VoteActionsModel>,
+                response: Response<VoteActionsModel>
+            ) {
+                if (response.body() != null) {
+                    if (response.body()!!.status) {
+                        if (isUpVoted) {
+                            datalist.data.message[pos].userReact = -1
+                            datalist.data.message[pos].upVoteCounter -= 1;
+                        } else {
+                            // new edit
+                            if (isDownVoted) {
+                                datalist.data.message[pos].downVoteCounter -= 1;
+                            }
+                            datalist.data.message[pos].userReact = 1
+                            datalist.data.message[pos].upVoteCounter += 1;
+                        }
+                        notifyItemChanged(pos)
+                    }
+                }
+            }
+        })
+    }
+
+    private fun sendDownVote(pos: Int, isDownVoted: Boolean, isUpVoted: Boolean) {
+        val retIn = RetrofitInstance.getRetrofitInstance(context).create(ApiInterface::class.java)
+        val downVote =
+            UpVotingBody(
+                datalist.data.message[pos].post.id,
+                AppReferences.getUserData(context)!!.id
+            )
+
+        retIn.downVote(downVote).enqueue(object : Callback<VoteActionsModel> {
+            override fun onFailure(call: Call<VoteActionsModel>, t: Throwable) {
+                Toast.makeText(
+                    context,
+                    t.message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            override fun onResponse(
+                call: Call<VoteActionsModel>,
+                response: Response<VoteActionsModel>
+            ) {
+                if (response.body() != null) {
+                    if (response.body()!!.status) {
+                        if (isDownVoted) {
+                            datalist.data.message[pos].userReact = -1
+                            datalist.data.message[pos].downVoteCounter -= 1;
+
+                        } else {
+                            // new edit
+                            if (isUpVoted) {
+                                datalist.data.message[pos].upVoteCounter -= 1;
+                            }
+                            datalist.data.message[pos].userReact = 0
+                            datalist.data.message[pos].downVoteCounter += 1;
+
+                        }
+                        notifyItemChanged(pos)
+                    }
+                }
+            }
+        })
     }
 
     private fun changeDrawables(view: ImageButton, background: Int, tint: Int) {
@@ -144,6 +284,7 @@ class HomeAdapter(var context: Context, var datalist: HomeResponse) :
     private fun handleCommentOnClick(holder: ViewHolder, position: Int) {
         holder.typeComment.setOnClickListener {
             val intent = Intent(context, PostActivity::class.java)
+            intent.putExtra("post", datalist.data.message[holder.adapterPosition])
             context.startActivity(intent)
         }
     }
@@ -152,5 +293,5 @@ class HomeAdapter(var context: Context, var datalist: HomeResponse) :
         return position
     }
 
-    override fun getItemCount() = datalist.subjects.size
+    override fun getItemCount() = datalist.data.message.size
 }

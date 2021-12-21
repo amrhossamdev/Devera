@@ -18,8 +18,8 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/light_gray"
         android:layout_marginBottom="8dp"
+        android:background="@color/light_gray"
         android:fillViewport="true"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/commentEditText"
@@ -30,9 +30,20 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:background="@color/white"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/light_gray">
 
+
+            <include
+                android:id="@+id/loading"
+                layout="@layout/progressbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/cardView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView"
@@ -115,6 +126,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/profileImage" />
 
                     <ImageView
+                        android:visibility="gone"
                         android:id="@+id/postImage"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -130,7 +142,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/postDescTxt" />
 
                     <TextView
-                        android:id="@+id/commentsCountTxt"
+                        android:id="@+id/postsCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -138,7 +150,7 @@
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="8dp"
                         android:background="@drawable/edit_text_border"
-                        android:hint="11 Comment"
+                        android:hint="0 Comment"
                         android:padding="8dp"
                         app:layout_constraintBottom_toBottomOf="@+id/downVoteBtn"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -208,6 +220,7 @@
 
             <androidx.cardview.widget.CardView
 
+                android:id="@+id/cardView3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -219,15 +232,36 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardView">
+                app:layout_constraintTop_toBottomOf="@+id/cardView"
+                app:layout_constraintVertical_bias="0.0">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycleView"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="4dp" />
-            </androidx.cardview.widget.CardView>
+                    android:layout_height="wrap_content">
 
+                    <include
+                        android:id="@+id/noCommentView"
+                        layout="@layout/no_comments_view"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toTopOf="@+id/recycleView"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycleView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="4dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
@@ -245,13 +279,14 @@
         android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton"
+        app:layout_constraintEnd_toStartOf="@+id/updatePassword"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="HardcodedText" />
 
+
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/updatePassword"
         android:layout_width="46dp"
         android:layout_height="46dp"
         android:layout_marginEnd="8dp"

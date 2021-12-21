@@ -3,18 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_margin="8dp"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="4dp"
         android:foreground="?android:attr/selectableItemBackground"
         app:cardCornerRadius="15dp"
         app:cardElevation="6dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -28,7 +28,8 @@
             <ImageView
                 android:id="@+id/groupImage"
                 android:layout_width="0dp"
-                android:layout_height="100dp"
+                android:layout_height="140dp"
+                android:layout_margin="8dp"
                 android:src="@drawable/cplusplus"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -42,6 +43,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
+                android:maxLines="1"
                 android:text="Group Name"
                 android:textColor="@color/black"
                 android:textSize="16sp"

@@ -3,75 +3,64 @@ package com.devera.app.ui.groups.activites
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.devera.app.R
+import com.devera.app.network.ApiInterface
+import com.devera.app.network.RetrofitInstance
+import com.devera.app.ui.BaseModel.BaseResponse
+import com.devera.app.ui.groups.models.Body.AddPostBody
+import com.devera.app.ui.groups.models.Body.GroupBody
 import com.devera.app.ui.home.adapter.HomeAdapter
-import com.devera.app.ui.home.models.HomeModel
-import com.devera.app.ui.home.models.HomeResponse
+import com.devera.app.ui.profile.models.ProfileResponse
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.textfield.TextInputEditText
+import com.learnawy.app.storage.AppReferences
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class GroupPostActivity : AppCompatActivity() {
 
     private lateinit var homeAdapter: HomeAdapter
     private lateinit var recyclerView: RecyclerView
-    private lateinit var homeResponse: HomeResponse
+    private var groupId: Int = 0
+    private var groupName: String = ""
+
+    private lateinit var groupRes: ProfileResponse
+    private lateinit var noPosts: View
+
     private lateinit var scrollView: NestedScrollView
     private lateinit var addPost: FloatingActionButton
     private var oldScrollYPostion = 0
+    private lateinit var dialog: Dialog
 
+    var ctx = this;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_posts)
         initToolbar()
         initViews()
         handleScroll()
-        val data = ArrayList<HomeModel>()
-        data.add(
-            HomeModel(
-                "Amr Hossam",
-                "A Static Website (sometimes called a flat or stationary page) is displayed in a web browser exactly as it is stored. It contains web pages with fixed content coded in HTML and stored on a web server. It does not change",
-                "Amr Hossam",
-                true, 1
-            )
-        )
-        data.add(
-            HomeModel(
-                "Youssef",
-                "A Static Website (sometimes called a flat or stationary page) is displayed in a web browser exactly as it is stored. It contains web pages with fixed content coded in HTML and stored on a web server. It does not change",
-                "Amr Hossam",
-                false, 0
-            )
-        )
-        data.add(
-            HomeModel(
-                "thba7ooo", "It's a great app !",
-                "Amr Hossam", false, null
-            )
-        )
-        data.add(
-            HomeModel(
-                "Amr", "تيست تيست واحد اتنين تلاته الله الله الله",
-                "3b3azeez", false, 0
-            )
-        )
-        data.add(
-            HomeModel(
-                "Amr Hossam",
-                "A Static Website (sometimes called a flat or stationary page) is displayed in a web browser exactly as it is stored. It contains web pages with fixed content coded in HTML and stored on a web server. It does not change",
-                "Abdelkader",
-                true, 0
-            )
-        )
-        homeResponse = HomeResponse(data);
-        initAdapter()
+        groupId = ((intent.getSerializableExtra("id") as? Int)!!)
+        groupName = ((intent.getSerializableExtra("name") as? String)!!)
+        noPosts = findViewById(R.id.noPosts)
+        title = groupName
+
+        Log.e("userId", AppReferences.getUserData(ctx)!!.id.toString())
+
+        getGroupFeed()
         addPost()
     }
 
@@ -82,7 +71,6 @@ class GroupPostActivity : AppCompatActivity() {
             supportActionBar?.setDisplayHomeAsUpEnabled(true);
             supportActionBar?.setDisplayShowHomeEnabled(true);
         }
-        title = "C++"
     }
 
     private fun initViews() {
@@ -109,30 +97,101 @@ class GroupPostActivity : AppCompatActivity() {
     }
 
     private fun showDialog(context: Context, msg: String?) {
-        val dialog = Dialog(context)
+        dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(true)
         val window: Window = dialog.window!!
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         dialog.setContentView(R.layout.add_post_dialog)
         val name = dialog.findViewById(R.id.userNameTxt) as TextView
-        name.text = "Amr Hossam"
-//        val dialogButton: Button = dialog.findViewById(R.id.btn_dialog) as Button
-//        dialogButton.setOnClickListener { dialog.dismiss() }
+        name.text = AppReferences.getUserData(ctx)!!.userName
+        val postDesc = dialog.findViewById(R.id.postDesc) as TextInputEditText
+        var send = dialog.findViewById<ImageButton>(R.id.updatePassword)
+        send.setOnClickListener {
+            val desc = postDesc.text.toString()
+            if (desc.isNotEmpty()) addPost(desc)
+
+        }
         dialog.show()
     }
 
-    fun addPost() {
+    private fun addPost() {
         addPost.setOnClickListener {
             showDialog(this@GroupPostActivity, "lol")
         }
+    }
+
+    fun <T> reverseList(list: List<T>): List<T> {
+        return list.indices.map { i: Int -> list[list.size - 1 - i] }
+    }
+
+    private fun getGroupFeed() {
+        val retIn =
+            RetrofitInstance.getRetrofitInstance(ctx).create(ApiInterface::class.java)
+        val groupBody = GroupBody(groupId, AppReferences.getUserData(ctx)!!.id)
+        retIn.getGroupPage(groupBody).enqueue(object : Callback<ProfileResponse> {
+            override fun onFailure(call: Call<ProfileResponse>, t: Throwable) {
+                Toast.makeText(ctx, t.message, Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onResponse(
+                call: Call<ProfileResponse>,
+                response: Response<ProfileResponse>
+            ) {
+                if (response.body() != null) {
+                    if (response.body()!!.status) {
+                        groupRes = response.body()!!
+                        var reverse = reverseList(groupRes.data.message)
+                        groupRes.data.message = reverse
+                        if (response.body()!!.data.message.isNotEmpty()) {
+                            initAdapter()
+                            noPosts.visibility = View.GONE
+
+                        } else {
+                            noPosts.visibility = View.VISIBLE
+                        }
+                    }
+                } else {
+                    Toast.makeText(ctx, "No Feed", Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
+    }
+
+    private fun addPost(postDesc: String) {
+        val retIn =
+            RetrofitInstance.getRetrofitInstance(ctx).create(ApiInterface::class.java)
+        val addPost = AddPostBody(
+            groupId,
+            postDesc,
+            AppReferences.getUserData(ctx)!!.id,
+        )
+        retIn.addPost(addPost).enqueue(object : Callback<BaseResponse> {
+            override fun onFailure(call: Call<BaseResponse>, t: Throwable) {
+                Toast.makeText(ctx, t.message, Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onResponse(
+                call: Call<BaseResponse>,
+                response: Response<BaseResponse>
+            ) {
+                if (response.body() != null) {
+                    if (response.body()!!.status) {
+                        getGroupFeed()
+                        dialog.dismiss()
+                    }
+                } else {
+                    Toast.makeText(ctx, "Error", Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
     }
 
     private fun initAdapter() {
         recyclerView = findViewById(R.id.recycleView)
         recyclerView.layoutManager = LinearLayoutManager(this@GroupPostActivity)
         homeAdapter =
-            HomeAdapter(this@GroupPostActivity, homeResponse)
+            HomeAdapter(this@GroupPostActivity, groupRes)
         recyclerView.adapter = homeAdapter
     }
 }

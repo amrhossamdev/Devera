@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.devera.app.R
-import com.devera.app.ui.home.models.CommentResponse
+import com.devera.app.ui.home.models.CommentModel
 import de.hdodenhof.circleimageview.CircleImageView
 
 
-class CommentsAdapter(var context: Context, var data: CommentResponse) :
+class CommentsAdapter(var context: Context, var data: CommentModel) :
     RecyclerView.Adapter<CommentsAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -30,13 +30,13 @@ class CommentsAdapter(var context: Context, var data: CommentResponse) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.userName.text = data.comments[position].name
-        holder.commentDesc.text = data.comments[position].desc
+        holder.userName.text = data.data[position].userName
+        holder.commentDesc.text = data.data[position].commentAbstract
     }
 
     override fun getItemViewType(position: Int): Int {
         return position
     }
 
-    override fun getItemCount() = data.comments.size
+    override fun getItemCount() = data.data.size
 }

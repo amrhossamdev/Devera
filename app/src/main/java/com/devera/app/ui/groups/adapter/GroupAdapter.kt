@@ -29,17 +29,39 @@ class GroupAdapter(var context: Context, var data: GroupResponse) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.groupTitle.text = data.groups[position].name
-        holder.itemView.setOnClickListener{
-            val intent = Intent(context,GroupPostActivity::class.java)
+        holder.groupTitle.text = data.data[position].groupName
+        setGroupImage(holder, position)
+        holder.itemView.setOnClickListener {
+            val intent = Intent(context, GroupPostActivity::class.java)
+            intent.putExtra("id", data.data[holder.adapterPosition].id)
+            intent.putExtra("name", data.data[holder.adapterPosition].groupName)
             context.startActivity(intent)
         }
     }
 
+    private fun setGroupImage(holder: ViewHolder, pos: Int) {
+        when (data.data[pos].id) {
+            1 -> {
+                holder.groupImage.setImageResource(R.drawable.cplusplus)
+            }
+            2 -> {
+                holder.groupImage.setImageResource(R.drawable.java)
+            }
+            3 -> {
+                holder.groupImage.setImageResource(R.drawable.android)
+            }
+            4 -> {
+                holder.groupImage.setImageResource(R.drawable.web)
+            }
+            5 -> {
+                holder.groupImage.setImageResource(R.drawable.security)
+            }
+        }
+    }
 
     override fun getItemViewType(position: Int): Int {
         return position
     }
 
-    override fun getItemCount() = data.groups.size
+    override fun getItemCount() = data.data.size
 }

@@ -60,36 +60,34 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
-                        android:id="@+id/imageView"
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:id="@+id/editProfile"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
                         android:elevation="3dp"
                         android:src="@drawable/edit_image"
-                        app:layout_constraintBottom_toBottomOf="@+id/profileImage"
-                        app:layout_constraintEnd_toEndOf="@+id/profileImage"
-                        app:layout_constraintTop_toTopOf="@+id/profileImage"
-                        app:layout_constraintVertical_bias="1.0" />
+                        app:layout_constraintBottom_toBottomOf="@+id/nameTxt"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toEndOf="@+id/profileImage"
+                        app:layout_constraintTop_toTopOf="@+id/nameTxt" />
 
                     <TextView
-                        android:id="@+id/textView5"
-                        android:layout_width="match_parent"
+                        android:id="@+id/nameTxt"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
                         android:gravity="center"
-                        android:text="Amr Hossam"
+                        tools:text="Amr Hossam"
                         android:textAlignment="center"
                         android:textColor="@color/black"
-                        android:textSize="24sp"
+                        android:textSize="18sp"
                         android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/profileImage"
+                        app:layout_constraintStart_toStartOf="@+id/profileImage"
                         app:layout_constraintTop_toBottomOf="@+id/profileImage" />
 
                     <TextView
-                        android:id="@+id/commentsCountTxt"
+                        android:id="@+id/postsCount"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
@@ -101,9 +99,9 @@
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/textView5"
-                        app:layout_constraintStart_toStartOf="@+id/textView5"
-                        app:layout_constraintTop_toBottomOf="@+id/textView5"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/nameTxt"
                         tools:ignore="HardcodedText" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -120,6 +118,17 @@
                 app:layout_constraintVertical_bias="0.0" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+
     </androidx.core.widget.NestedScrollView>
 
+    <include
+        android:visibility="gone"
+        android:id="@+id/loading"
+        layout="@layout/progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include4" />
 </androidx.constraintlayout.widget.ConstraintLayout>
