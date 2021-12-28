@@ -3,14 +3,15 @@
     package="com.devera.app">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.Devera">
+        android:theme="@style/Theme.Devera"
+        android:usesCleartextTraffic="true">
 
         <activity
             android:name=".ui.profile.activities.EditProfileActivity"
@@ -36,6 +37,7 @@
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Devera.NoActionBar" />
+
         <activity
             android:name=".ui.signIn.activities.SignInActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"

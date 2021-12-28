@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.devera.app.R
 import com.devera.app.network.ApiInterface
 import com.devera.app.network.RetrofitInstance
-import com.devera.app.ui.BaseModel.BaseResponse
+import com.devera.app.ui.baseModel.BaseResponse
 import com.devera.app.ui.home.adapter.CommentsAdapter
 import com.devera.app.ui.home.models.*
 import com.devera.app.ui.home.models.BodyRequestsModel.AddCommentBody
@@ -99,7 +99,7 @@ class PostActivity : AppCompatActivity() {
         var postDesc = findViewById<TextView>(R.id.postDescTxt)
         var time = findViewById<TextView>(R.id.timeTxt)
 
-        post = (intent.getSerializableExtra("post") as? com.devera.app.ui.profile.models.Message)!!
+        post = (intent.getSerializableExtra("post") as? Message)!!
         getComments(post.post.id)
 
         //initPost

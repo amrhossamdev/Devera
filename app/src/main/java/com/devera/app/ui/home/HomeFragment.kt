@@ -27,6 +27,8 @@ class HomeFragment : Fragment() {
     private lateinit var homeResponse: ProfileResponse
     private lateinit var loading: View
     private lateinit var viw: View
+    private lateinit var noPostsView: View
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,6 +47,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun getFeed(view: View) {
+        noPostsView = view.findViewById(R.id.noPosts)
         loading.visibility = View.VISIBLE
         val retIn =
             RetrofitInstance.getRetrofitInstance(requireContext()).create(ApiInterface::class.java)
@@ -64,10 +67,13 @@ class HomeFragment : Fragment() {
                 if (response.body() != null) {
                     if (response.body()!!.status) {
                         if (response.body()!!.data.message.isNotEmpty()) {
+                            noPostsView.visibility = View.GONE
                             homeResponse = response.body()!!
-                            var reverse = reverseList(homeResponse.data.message)
+                            val reverse = reverseList(homeResponse.data.message)
                             homeResponse.data.message = reverse
                             initAdapter(view)
+                        }else{
+                            noPostsView.visibility = View.VISIBLE
                         }
                         loading.visibility = View.GONE
                     }
@@ -78,9 +84,11 @@ class HomeFragment : Fragment() {
             }
         })
     }
+
     fun <T> reverseList(list: List<T>): List<T> {
         return list.indices.map { i: Int -> list[list.size - 1 - i] }
     }
+
     private fun initAdapter(view: View) {
         recyclerView = view.findViewById(R.id.recycleView)
         recyclerView.layoutManager = LinearLayoutManager(context)

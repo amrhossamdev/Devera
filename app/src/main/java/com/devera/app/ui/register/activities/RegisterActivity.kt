@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.devera.app.R
 import com.devera.app.network.ApiInterface
 import com.devera.app.network.RetrofitInstance
-import com.devera.app.ui.BaseModel.BaseResponse
+import com.devera.app.ui.baseModel.BaseResponse
 import com.devera.app.ui.register.model.RegisterBody
 import com.devera.app.ui.signIn.activities.SignInActivity
 import com.google.android.material.textfield.TextInputEditText
@@ -30,9 +30,11 @@ class RegisterActivity : AppCompatActivity() {
     lateinit var signUp: Button
     lateinit var loading: View
     var ctx = this
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+
         initView()
     }
 
@@ -50,6 +52,7 @@ class RegisterActivity : AppCompatActivity() {
         confirmPassword = findViewById(R.id.confirmPassword)
         signUp = findViewById(R.id.signUp)
         loading = findViewById(R.id.loading)
+
         back.setOnClickListener {
             finish();
         }
@@ -103,7 +106,6 @@ class RegisterActivity : AppCompatActivity() {
         retIn.signUp(signUpBody).enqueue(object : Callback<BaseResponse> {
             override fun onFailure(call: Call<BaseResponse>, t: Throwable) {
                 loading.visibility = View.GONE
-
                 Toast.makeText(
                     ctx,
                     t.message,
@@ -113,7 +115,6 @@ class RegisterActivity : AppCompatActivity() {
 
             override fun onResponse(call: Call<BaseResponse>, response: Response<BaseResponse>) {
                 loading.visibility = View.GONE
-
                 if (response.body() != null) {
                     if (response.body()!!.status) {
                         Toast.makeText(
@@ -121,7 +122,8 @@ class RegisterActivity : AppCompatActivity() {
                             response.body()!!.message,
                             Toast.LENGTH_SHORT
                         ).show()
-                        val i = Intent(ctx, SignInActivity::class.java);
+
+                        val i = Intent(ctx, SignInActivity::class.java)
                         startActivity(i)
                     } else {
                         Toast.makeText(

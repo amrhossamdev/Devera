@@ -1,4 +1,4 @@
-package com.devera.app.ui.BaseModel
+package com.devera.app.ui.baseModel
 
 data class BaseResponse(
     val message: String,

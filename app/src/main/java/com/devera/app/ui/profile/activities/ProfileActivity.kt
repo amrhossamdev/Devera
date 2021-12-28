@@ -31,19 +31,18 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var profileRes: ProfileResponse
     private lateinit var homeResponse: HomeResponse
-
     private lateinit var loading: View
+    private lateinit var noPostView: View
 
-
-    var ctx = this;
-    var hideMenuItem = false;
+    var ctx = this
+    var hideMenuItem = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
         initToolbar()
         loading = findViewById(R.id.loading)
-
+        noPostView = findViewById(R.id.noPosts)
 //        homeResponse = HomeResponse(data);
 //        initAdapter()
         val mIntent = intent
@@ -88,7 +87,7 @@ class ProfileActivity : AppCompatActivity() {
         }
         if (AppReferences.getUserData(ctx)!!.id != profileRes.user.id) {
             profileImage.visibility = View.GONE
-        }else{
+        } else {
             profileImage.visibility = View.VISIBLE
         }
         profileName.text = profileRes.user.fullName
@@ -139,8 +138,10 @@ class ProfileActivity : AppCompatActivity() {
                         profileRes = response.body()!!
                         if (response.body()!!.data.message.isNotEmpty()) {
                             initAdapter()
-
+                            noPostView.visibility = View.GONE
                         } else {
+                            noPostView.visibility = View.VISIBLE
+
                             Toast.makeText(ctx, "No feed", Toast.LENGTH_SHORT).show()
                         }
                         editProfile()

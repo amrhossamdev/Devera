@@ -72,17 +72,21 @@ class HomeAdapter(var context: Context, var datalist: ProfileResponse) :
                 isDownVoted = true
             }
         }
-        Log.e("VOTE DATA", userReact.toString());
+        Log.e("VOTE DATA", userReact.toString())
+
         handleReact(isUpVoted, isDownVoted, holder)
         handleClickOnReact(isUpVoted, isDownVoted, holder, position)
         handleCommentOnClick(holder, position)
+
         handleOnProfileClick(holder)
+
         val timeStamp = datalist.data.message[position].post.createdAt
         val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("h:mm a", Locale.ENGLISH)
         val bookingTime: Instant = Instant.parse(timeStamp)
         val finalTime: String = bookingTime.atZone(ZoneId.systemDefault()).format(timeFormatter)
 
         holder.postImage.visibility = View.GONE
+        //setting data
         holder.time.text = finalTime
         holder.userName.text = datalist.data.message[position].post.userName
         holder.desc.text = datalist.data.message[position].post.postAbstract

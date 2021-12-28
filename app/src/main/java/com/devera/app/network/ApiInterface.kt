@@ -1,7 +1,7 @@
 package com.devera.app.network
 
 import android.content.Context
-import com.devera.app.ui.BaseModel.BaseResponse
+import com.devera.app.ui.baseModel.BaseResponse
 import com.devera.app.ui.groups.models.Body.AddPostBody
 import com.devera.app.ui.groups.models.Body.GroupBody
 import com.devera.app.ui.groups.models.GroupResponse
@@ -30,7 +30,6 @@ import retrofit2.http.POST
 
 interface ApiInterface {
 
-    //    @Headers("Content-Type:application/json")
     @POST("login")
     fun signIn(
         @Body info: SignInBody
@@ -41,7 +40,6 @@ interface ApiInterface {
         @Body info: RegisterBody
     ): Call<BaseResponse>
 
-    //    @Headers("Content-Type:application/json")
     @POST("homePage")
     fun getFeed(
         @Body info: HomeBody
@@ -103,18 +101,15 @@ interface ApiInterface {
 
 class RetrofitInstance {
     companion object {
-
         fun getRetrofitInstance(context: Context): Retrofit {
-
             val interceptor = HttpLoggingInterceptor()
             interceptor.level = HttpLoggingInterceptor.Level.BODY
 
-//
-            var client = OkHttpClient.Builder()
+            val client = OkHttpClient.Builder()
                 .addInterceptor(interceptor).build() // for loging
 
             return Retrofit.Builder()
-                .baseUrl("http://192.168.1.4:4200/")
+                .baseUrl("http://192.168.43.144:4200/")
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()

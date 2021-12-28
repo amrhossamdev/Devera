@@ -7,6 +7,15 @@
     android:background="@color/light_gray"
     tools:context=".ui.home.HomeFragment">
 
+    <include
+        android:id="@+id/noPosts"
+        layout="@layout/no_posts"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleView"
         android:layout_width="match_parent"
@@ -22,9 +31,9 @@
     <include
         android:id="@+id/loading"
         layout="@layout/progressbar"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

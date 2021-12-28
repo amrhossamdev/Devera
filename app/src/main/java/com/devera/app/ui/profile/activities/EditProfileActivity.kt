@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.devera.app.R
 import com.devera.app.network.ApiInterface
 import com.devera.app.network.RetrofitInstance
-import com.devera.app.ui.BaseModel.BaseResponse
+import com.devera.app.ui.baseModel.BaseResponse
 import com.devera.app.ui.profile.models.Body.UpdatePassword
 import com.devera.app.ui.profile.models.Body.UpdateProfile
 import com.google.android.material.textfield.TextInputEditText

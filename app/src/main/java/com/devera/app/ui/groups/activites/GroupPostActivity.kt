@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.devera.app.R
 import com.devera.app.network.ApiInterface
 import com.devera.app.network.RetrofitInstance
-import com.devera.app.ui.BaseModel.BaseResponse
+import com.devera.app.ui.baseModel.BaseResponse
 import com.devera.app.ui.groups.models.Body.AddPostBody
 import com.devera.app.ui.groups.models.Body.GroupBody
 import com.devera.app.ui.home.adapter.HomeAdapter

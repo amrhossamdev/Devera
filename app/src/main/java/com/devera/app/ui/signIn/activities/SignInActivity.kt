@@ -27,6 +27,7 @@ class SignInActivity : AppCompatActivity() {
     lateinit var passwordEdit: TextInputEditText
     lateinit var loading: View
     var ctx = this
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
